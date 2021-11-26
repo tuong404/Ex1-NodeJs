@@ -1,4 +1,4 @@
-const controller = require('../controller/index');
+const controller = require('../controllers/index');
 
 const route = (app) => {
 
