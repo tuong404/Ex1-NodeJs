@@ -4,7 +4,7 @@ const Users = require('../model/index')
 const secretKey = '123123';
 
 const loginController = (req, res) => {
-    const { username, password } = req.body;
+
     Users.findOne({
         username: req.body.username,
         password: req.body.password
@@ -20,7 +20,6 @@ const loginController = (req, res) => {
             res.json({
                 accessToken
             });
-            this.name = username;
         } else {
             res.send('Username or password incorrect');
         }
@@ -44,34 +43,37 @@ const authentication = (req, res, next) => {
     if (!data) {
         res.send('loi!!!')
     };
-    const user = data;
+
+    req.user = data;
     next();
 }
 const getProfileController = (req, res) => {
+    const username = req.user.username;
 
-    Users.findOne({ username: this.name }).exec((err, x) => {
+    Users.findOne({ username }).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
         }
-        if (x) {
+        if (user) {
             res.json({
-                name: x.name,
-                age: x.age,
+                name: user.name,
+                age: user.age,
             });
         }
     })
 }
 
 const deleteUserController = (req, res) => {
+    const id = req.params.id;
 
-    Users.findOne({ username: this.name }).exec((err, x) => {
+    Users.findOne({ id }).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
         }
-        if (x) {
-            const role = x.role;
+        if (user) {
+            const role = user.role;
             if (role !== 'admin') {
                 res.send('loi!!!')
             } else {
